@@ -15,9 +15,9 @@ import es.rf.tienda.util.Validator;
 public class CategoriaDAO {
 
 	private final String SELECT = "SELECT * FROM Categoria ";
-	private final String UPDATE = "UPDATE categoria ";
-	private final String INSERT = "INSERT INTO categoria ";
-	private final String DELETE = "DELETE ON categoria ";
+	private final String UPDATE = "UPDATE categoria set ";
+	private final String INSERT = "INSERT INTO categoria values ";
+	private final String DELETE = "DELETE FROM categoria ";
 	
 	
 	public Categoria leerRegistro(Categoria clase) throws DAOException, DomainException  {

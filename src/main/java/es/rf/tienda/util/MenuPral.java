@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import es.rf.tienda.controllers.CategoriaController;
-
+import es.rf.tienda.controllers.Controlador;
 
 import java.awt.GridLayout;
 import javax.swing.JButton;
@@ -56,7 +56,7 @@ public class MenuPral extends JFrame {
 					public void run() {
 						try {
 							CategoriaController controller = new CategoriaController();
-							controller.setOption(new String[]{CategoriaController.LIST});
+							controller.setOption(Controlador.LIST);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

@@ -18,7 +18,7 @@ public interface Controlador<S> {
 	public S leer(S obj);
 	public List<S> leerTodos();
 	public List<S> leerSQL(String sql);
-	public void grabar(S obj) throws DAOException;
+	public boolean grabar(S obj) throws DAOException;
 	public boolean actualizar(S obj) throws DAOException;
 	public boolean borrar(S obj) throws DAOException;
 	public Map<String,String> obtenSelect();

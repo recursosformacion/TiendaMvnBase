@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JTable;
 
 import es.rf.tienda.controllers.CategoriaController;
+import es.rf.tienda.controllers.Controlador;
 import es.rf.tienda.dominio.Categoria;
 
 public class LCCategoria extends JFrame implements ActionListener, MouseListener {
@@ -36,8 +37,16 @@ public class LCCategoria extends JFrame implements ActionListener, MouseListener
 	private static LCCategoria instancia;
 	private JTable listado;
 	private String codigo = "";
+	private Categoria reg = new Categoria();
 	private List<Categoria> listaCategoria;
 	private static CategoriaController controller;
+	
+	
+	public static final String ADD = Controlador.ADD;
+	public static final String VIEW = Controlador.VIEW;
+	public static final String UPDATE = Controlador.UPDATE;
+	public static final String DELETE = Controlador.DELETE;
+	public static final String LIST = Controlador.LIST;
 
 	private String[] cabecera = { "id", "Nombre", "Descripcion" };
 
@@ -112,9 +121,10 @@ public class LCCategoria extends JFrame implements ActionListener, MouseListener
 		JPanel botoneraIzquierda = new JPanel();
 		botoneraIzquierda.setLayout(new BoxLayout(botoneraIzquierda, BoxLayout.X_AXIS));
 		botoneraIzquierda.add(montaBoton("Quitar filtros", "qFiltro", false));
-		botoneraIzquierda.add(montaBoton("Nuevo", "nuevo", false));
-		botoneraIzquierda.add(montaBoton("Modificar", "modificar", false));
-		botoneraIzquierda.add(montaBoton("Ver", "ver", false));
+		botoneraIzquierda.add(montaBoton("Nuevo", ADD, false));
+		botoneraIzquierda.add(montaBoton("Modificar", UPDATE, false));
+		botoneraIzquierda.add(montaBoton("Ver", VIEW, false));
+		botoneraIzquierda.add(montaBoton("Borrar", DELETE, false));
 
 		botonera.add(botoneraIzquierda, BorderLayout.WEST);
 
@@ -178,48 +188,51 @@ public class LCCategoria extends JFrame implements ActionListener, MouseListener
 
 	public void ordNuevo() {
 		System.out.println("Añadir");
-		controller.setOption(new String[] { CategoriaController.ADD, "0" });
+		controller.setOption(ADD);
 	}
 
 	public void ordQuitaFiltros() {
-		System.out.println("Quitar filtrosr");
+		System.out.println("Quitar filtros");
 	}
 
 	public void ordBorrar() {
 		if (!codigo.equals("")) {
 			System.out.println("Borrar:" + codigo);
-			controller.setOption(new String[] { CategoriaController.DELETE, codigo });
+			controller.setOption(DELETE, reg );
 		}
 	}
 
 	public void ordModificar() {
 		if (!codigo.equals("")) {
 			System.out.println("Modificar:" + codigo);
-			controller.setOption(new String[] { CategoriaController.UPDATE, codigo });
+			controller.setOption(UPDATE, reg);
 		}
 	}
 
 	public void ordVer() {
 		if (!codigo.equals("")) {
 			System.out.println("Ver:" + codigo);
-			controller.setOption(new String[] { CategoriaController.VIEW, codigo });
+			controller.setOption(VIEW, reg );
 		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("Entro:" + e.getActionCommand());
+		
 		String comando = e.getActionCommand();
 		if (comando.equals("cancela"))
 			ordCancelar();
-		else if (comando.equals("nuevo"))
-			ordNuevo();
 		else if (comando.equals("qFiltro"))
 			ordQuitaFiltros();
-		else if (comando.equals("modificar"))
+		
+		else if (comando.equals(ADD))
+			ordNuevo();	
+		else if (comando.equals(UPDATE))
 			ordModificar();
-		else if (comando.equals("ver"))
+		else if (comando.equals(VIEW))
 			ordVer();
+		else if (comando.equals(DELETE))
+			ordBorrar();
 
 	}
 
@@ -229,7 +242,8 @@ public class LCCategoria extends JFrame implements ActionListener, MouseListener
 		JTable table = (JTable) me.getSource();
 		int linea = table.getSelectedRow();
 		this.codigo = table.getValueAt(linea, 0).toString();
-		System.out.println(this.codigo);
+		reg = new Categoria();
+		reg.setId(Integer.parseInt(codigo));
 		if (me.getClickCount() == 2) {
 			ordModificar();
 
