@@ -10,7 +10,9 @@ import es.rf.tienda.dominio.Categoria;
 import es.rf.tienda.exception.DomainException;
 import es.rf.tienda.util.RutinasSwing;
 
+import javax.swing.InputVerifier;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -105,8 +107,7 @@ public class FrCategoria extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Create the frame. 
-	 * Prodria se private
+	 * Create the frame. Prodria se private
 	 */
 	public JFrame montarPantalla() {
 
@@ -156,20 +157,21 @@ public class FrCategoria extends JFrame implements ActionListener {
 		gbc_nombreText.gridy = 2;
 		gridBagLayout.add(nombreText, gbc_nombreText);
 		nombreText.setColumns(10);
-		nombreText.addFocusListener(new FocusListener() {
-			public void focusGained(FocusEvent e) {
-			};
+		nombreText.setInputVerifier(new InputVerifier() {
+			@Override
+			public boolean verify(JComponent input) {
+				boolean isValid = false;
+				String text = ((JTextField) input).getText();
 
-			public void focusLost(FocusEvent e) {
-				if (!e.isTemporary()) {
-					String content = nombreText.getText();
-					try {
-						reg.setCat_nombre(content);
-					} catch (DomainException e1) {
-						e1.printStackTrace();
-					}
+				try {
+					reg.setCat_nombre(text);
+					isValid = true;
+				} catch (DomainException e1) {
+					mandaMensaje(e1.getMessage());
+
 				}
-			}	
+				return isValid;
+			}
 		});
 
 		JLabel lblNewLabel_2 = new JLabel("Descripcion");
@@ -184,7 +186,9 @@ public class FrCategoria extends JFrame implements ActionListener {
 		descripcionText = new JTextArea();
 		descripcionText.setColumns(50);
 		descripcionText.setRows(5);
+
 		descripcionText.addFocusListener(new FocusListener() {
+
 			public void focusGained(FocusEvent e) {
 			};
 
@@ -193,8 +197,9 @@ public class FrCategoria extends JFrame implements ActionListener {
 					String content = descripcionText.getText();
 					reg.setCat_descripcion(content);
 				}
-			}	
+			}
 		});
+
 		GridBagConstraints gbc_descripcionText = new GridBagConstraints();
 		gbc_descripcionText.anchor = GridBagConstraints.NORTH;
 		gbc_descripcionText.gridwidth = 5;
@@ -261,8 +266,6 @@ public class FrCategoria extends JFrame implements ActionListener {
 		montaDatos();
 	}
 
-	
-
 	public void setController(CategoriaController obj) {
 		FrCategoria.controller = (CategoriaController) obj;
 
@@ -281,9 +284,26 @@ public class FrCategoria extends JFrame implements ActionListener {
 				setVisible(false);
 				dispose();
 			} else {
-				JOptionPane.showMessageDialog(null, "Faltan datos obligatorios", "Errores en entrada",
-						JOptionPane.ERROR_MESSAGE);
+				mandaMensaje("Faltan datos obligatorios");
 			}
 		}
+	}
+
+	public void mandaMensaje(String mensaje) {
+		JOptionPane.showMessageDialog(null, mensaje, "Errores en entrada", JOptionPane.ERROR_MESSAGE);
+	}
+
+	private static InputVerifier getInputVerifier() {
+		InputVerifier verifier = new InputVerifier() {
+
+			@Override
+			public boolean verify(JComponent input) {
+				JTextField field = (JTextField) input;
+				String text = field.getText();
+				return true;
+			}
+
+		};
+		return verifier;
 	}
 }
